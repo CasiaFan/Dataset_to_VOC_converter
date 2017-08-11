@@ -62,7 +62,7 @@ def instance2xml_base(anno, img_size, bbox_type='xyxy'):
     E = objectify.ElementMaker(annotate=False)
     anno_tree = E.annotation(
         E.folder('VOC2014_instance/person'),
-        E.filename(anno['id']+".jpg"),
+        E.filename(anno['id']),
         E.source(
             E.database('Caltech pedestrian'),
             E.annotation('Caltech pedestrian'),
