@@ -153,8 +153,8 @@ def main():
     seq_outputdir = "/startdt_data/caltech_pedestrian_dataset"
     vbb_outputdir = "/startdt_data/caltech_pedestrian_dataset"
     parse_anno_file(vbb_inputdir, seq_inputdir, vbb_outputdir, seq_outputdir)
-    xml_file = "/startdt_data/caltech_pedestrian_dataset/annotations/set00/bbox/V013_1512.xml"
-    img_file = "/startdt_data/caltech_pedestrian_dataset/set00/frame/V013_1512.jpg"
+    xml_file = "/startdt_data/caltech_pedestrian_dataset/annotations/set00/bbox/set00_V001_1.xmlV013_1512.xml"
+    img_file = "/startdt_data/caltech_pedestrian_dataset/set00/frame/set00_V013_1512.jpg"
     visualize_bbox(xml_file, img_file)
 
 
