@@ -5,7 +5,7 @@ from collections import defaultdict
 import numpy as np
 from lxml import etree, objectify
 
-def vbb_anno2dict(vbb_file):
+def vbb_anno2dict(vbb_file, cam_id):
     filename = os.path.splitext(os.path.basename(vbb_file))[0]
     annos = defaultdict(dict)
     vbb = loadmat(vbb_file)
@@ -16,7 +16,7 @@ def vbb_anno2dict(vbb_file):
     person_index_list = np.where(np.array(objLbl) == "person")[0]
     for frame_id, obj in enumerate(objLists):
         if len(obj) > 0:
-            frame_name = str(filename) + "_" + str(frame_id+1) + ".jpg"
+            frame_name = str(cam_id) + "_" + str(filename) + "_" + str(frame_id+1) + ".jpg"
             for id, pos, occl in zip(obj['id'][0], obj['pos'][0], obj['occl'][0]):
                 id = int(id[0][0])
                 if not id in person_index_list:  # only use bbox whose label is person
@@ -31,12 +31,12 @@ def vbb_anno2dict(vbb_file):
     return annos
 
 
-def seq2img(annos, seq_file, outdir):
+def seq2img(annos, seq_file, outdir, cam_id):
     cap = cv2.VideoCapture(seq_file)
     index = 1
     # captured frame list
-    cam_id = os.path.splitext(os.path.basename(seq_file))[0]
-    cap_frames_index = np.sort([int(os.path.splitext(id)[0].split("_")[1]) for id in annos.keys()])
+    v_id = os.path.splitext(os.path.basename(seq_file))[0]
+    cap_frames_index = np.sort([int(os.path.splitext(id)[0].split("_")[2]) for id in annos.keys()])
     while True:
         ret, frame = cap.read()
         if ret:
@@ -45,8 +45,8 @@ def seq2img(annos, seq_file, outdir):
                 continue
             if not os.path.exists(outdir):
                 os.makedirs(outdir)
-            outname = os.path.join(outdir, cam_id+"_"+str(index)+".jpg")
-            print "Current frame: ", cam_id, str(index)
+            outname = os.path.join(outdir, str(cam_id)+"_"+v_id+"_"+str(index)+".jpg")
+            print "Current frame: ", v_id, str(index)
             cv2.imwrite(outname, frame)
             height, width, _ = frame.shape
         else:
@@ -107,9 +107,10 @@ def parse_anno_file(vbb_inputdir, seq_inputdir, vbb_outputdir, seq_outputdir):
     sub_dirs = os.listdir(vbb_inputdir)
     for sub_dir in sub_dirs:
         print "Parsing annotations of camera: ", sub_dir
+        cam_id = sub_dir
         vbb_files = glob.glob(os.path.join(vbb_inputdir, sub_dir, "*.vbb"))
         for vbb_file in vbb_files:
-            annos = vbb_anno2dict(vbb_file)
+            annos = vbb_anno2dict(vbb_file, cam_id)
             if annos:
                 vbb_outdir = os.path.join(vbb_outputdir, "annotations", sub_dir, "bbox")
                 # extract frames from seq
@@ -119,7 +120,7 @@ def parse_anno_file(vbb_inputdir, seq_inputdir, vbb_outputdir, seq_outputdir):
                     os.makedirs(vbb_outdir)
                 if not os.path.exists(seq_outdir):
                     os.makedirs(seq_outdir)
-                img_size = seq2img(annos, seq_file, seq_outdir)
+                img_size = seq2img(annos, seq_file, seq_outdir, cam_id)
                 for filename, anno in sorted(annos.items(), key=lambda x: x[0]):
                     if "bbox" in anno:
                         anno_tree = instance2xml_base(anno, img_size)
@@ -151,7 +152,7 @@ def main():
     vbb_inputdir = "/startdt_data/caltech_pedestrian_dataset/annotations"
     seq_outputdir = "/startdt_data/caltech_pedestrian_dataset"
     vbb_outputdir = "/startdt_data/caltech_pedestrian_dataset"
-    # parse_anno_file(vbb_inputdir, seq_inputdir, vbb_outputdir, seq_outputdir)
+    parse_anno_file(vbb_inputdir, seq_inputdir, vbb_outputdir, seq_outputdir)
     xml_file = "/startdt_data/caltech_pedestrian_dataset/annotations/set00/bbox/V013_1512.xml"
     img_file = "/startdt_data/caltech_pedestrian_dataset/set00/frame/V013_1512.jpg"
     visualize_bbox(xml_file, img_file)
