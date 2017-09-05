@@ -17,17 +17,19 @@ def vbb_anno2dict(vbb_file, cam_id):
     for frame_id, obj in enumerate(objLists):
         if len(obj) > 0:
             frame_name = str(cam_id) + "_" + str(filename) + "_" + str(frame_id+1) + ".jpg"
+            annos[frame_name] = defaultdict(list)
+            annos[frame_name]["id"] = frame_name
+            annos[frame_name]["label"] = "person"
             for id, pos, occl in zip(obj['id'][0], obj['pos'][0], obj['occl'][0]):
-                id = int(id[0][0])
+                id = int(id[0][0]) - 1  # for matlab start from 1 not 0
                 if not id in person_index_list:  # only use bbox whose label is person
                     continue
                 pos = pos[0].tolist()
                 occl = int(occl[0][0])
-                annos[frame_name] = defaultdict(list)
-                annos[frame_name]["id"] = frame_name
-                annos[frame_name]["label"] = "person"
                 annos[frame_name]["occlusion"].append(occl)
                 annos[frame_name]["bbox"].append(pos)
+            if not annos[frame_name]["bbox"]:
+                del annos[frame_name]
     return annos
 
 
