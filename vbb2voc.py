@@ -116,6 +116,20 @@ def instance2xml_base(anno, img_size, bbox_type='xyxy'):
             ymax = ymin+h
         else:
             xmin, ymin, xmax, ymax = bbox
+        xmin = int(xmin)
+        ymin = int(ymin)
+        xmax = int(xmax)
+        ymax = int(ymax)
+        if xmin < 0:
+            xmin = 0
+        if xmax > img_size[0] - 1:
+            xmax = img_size[0] - 1;
+        if ymin < 0:
+            ymin = 0;
+        if ymax > img_size[1] - 1:
+            ymax = img_size[1] -1
+        if ymax <= ymin or xmax <= xmin:
+            continue
         E = objectify.ElementMaker(annotate=False)
         anno_tree.append(
             E.object(
