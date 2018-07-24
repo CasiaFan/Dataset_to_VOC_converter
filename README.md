@@ -1,9 +1,10 @@
 These scripts are used for convert datasets (MS COCO, Caltech pedestrian dataset) to PASCAL VOC format for later training.
 
 ### Requirements
-- **Python2.7** (not work normally under python3)
+- **Python3.X**
 - [MS COCO toolbox](https://github.com/pdollar/coco)
 - cytoolz
+- pathos 
 - lmxl
 - scipy, numpy
 

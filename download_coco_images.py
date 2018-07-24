@@ -2,7 +2,6 @@ import os, time, sys, argparse, shutil, logging
 from pathos.multiprocessing import Pool
 import multiprocessing.pool
 from functools import partial
-from urllib import urlretrieve
 import requests
 import pandas as pd
 import numpy as np
@@ -49,7 +48,6 @@ def download(name_url, tarDir):
     tic = time.time()
     fname = os.path.join(tarDir, name_url[0]+".jpg")
     if not os.path.exists(fname):
-        # urlretrieve(img['coco_url'], fname)
         try:
             request = requests.get(name_url[1], timeout=20, stream=True)
         except:

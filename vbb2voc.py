@@ -70,7 +70,7 @@ def seq2img(annos, seq_file, outdir, cam_id):
             if not os.path.exists(outdir):
                 os.makedirs(outdir)
             outname = os.path.join(outdir, str(cam_id)+"_"+v_id+"_"+str(index)+".jpg")
-            print "Current frame: ", v_id, str(index)
+            print("Current frame: ", v_id, str(index))
             cv2.imwrite(outname, frame)
             height, width, _ = frame.shape
         else:
@@ -148,7 +148,7 @@ def parse_anno_file(vbb_inputdir, seq_inputdir, vbb_outputdir, seq_outputdir, pe
     assert os.path.exists(vbb_inputdir)
     sub_dirs = os.listdir(vbb_inputdir)
     for sub_dir in sub_dirs:
-        print "Parsing annotations of camera: ", sub_dir
+        print("Parsing annotations of camera: ", sub_dir)
         cam_id = sub_dir
         vbb_files = glob.glob(os.path.join(vbb_inputdir, sub_dir, "*.vbb"))
         for vbb_file in vbb_files:
@@ -167,7 +167,7 @@ def parse_anno_file(vbb_inputdir, seq_inputdir, vbb_outputdir, seq_outputdir, pe
                     if "bbox" in anno:
                         anno_tree = instance2xml_base(anno, img_size)
                         outfile = os.path.join(vbb_outdir, os.path.splitext(filename)[0]+".xml")
-                        print "Generating annotation xml file of picture: ", filename
+                        print("Generating annotation xml file of picture: ", filename)
                         etree.ElementTree(anno_tree).write(outfile, pretty_print=True)
 
 
@@ -192,9 +192,9 @@ def visualize_bbox(xml_file, img_file):
 def main():
     seq_inputdir = "/startdt_data/caltech_pedestrian_dataset"
     vbb_inputdir = "/startdt_data/caltech_pedestrian_dataset/annotations"
-    seq_outputdir = "/startdt_data/caltech_pedestrian_dataset"
-    vbb_outputdir = "/startdt_data/caltech_pedestrian_dataset"
-    person_types = ["person", "people"]
+    seq_outputdir = "/startdt_data/caltech_pedestrian_dataset/test"
+    vbb_outputdir = "/startdt_data/caltech_pedestrian_dataset/test"
+    person_types = ["person"]
     parse_anno_file(vbb_inputdir, seq_inputdir, vbb_outputdir, seq_outputdir, person_types=person_types)
     # xml_file = "/startdt_data/caltech_pedestrian_dataset/annotations/set00/bbox/set00_V013_1511.xml"
     # img_file = "/startdt_data/caltech_pedestrian_dataset/set00/frame/set00_V013_1511.jpg"

@@ -43,7 +43,7 @@ def instance2xml_bbox(anno, bbox_type='xyxy'):
             E.xmax(xmax),
             E.ymax(ymax)
         ),
-        E.difficult(0)
+        E.difficult(anno['iscrowd'])
     )
     return anno_tree
 
@@ -51,7 +51,7 @@ def instance2xml_bbox(anno, bbox_type='xyxy'):
 def parse_instance(content, outdir):
     categories = {d['id']: d['name'] for d in content['categories']}
     # merge images and annotations: id in images vs image_id in annotations
-    merged_info_list = map(cytoolz.merge, cytoolz.join('id', content['images'], 'image_id', content['annotations']))
+    merged_info_list = list(map(cytoolz.merge, cytoolz.join('id', content['images'], 'image_id', content['annotations'])))
     # convert category id to name
     for instance in merged_info_list:
         instance['category_id'] = categories[instance['category_id']]
@@ -66,7 +66,7 @@ def parse_instance(content, outdir):
             anno_tree.append(instance2xml_bbox(group, bbox_type='xyxy'))
         for filename in filenames:
             etree.ElementTree(anno_tree).write(filename, pretty_print=True)
-        print "Formating instance xml file {} done!".format(name)
+        print("Formating instance xml file {} done!".format(name))
 
 
 def keypoints2xml_base(anno):
@@ -126,7 +126,7 @@ def parse_keypoints(content, outdir):
             anno_tree = keypoints2xml_object(group, anno_tree, keypoints, bbox_type="xyxy")
         doc = etree.ElementTree(anno_tree)
         doc.write(open(filename, "w"), pretty_print=True)
-        print "Formating keypoints xml file {} done!".format(name)
+        print("Formating keypoints xml file {} done!".format(name))
 
 
 def main(args):

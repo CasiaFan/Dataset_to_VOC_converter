@@ -85,7 +85,7 @@ def parse_anno_file(inputdir, outputdir):
     assert os.path.exists(inputdir)
     sub_dirs = os.listdir(inputdir)
     for sub_dir in sub_dirs:
-        print "Parsing annotations of camera: ", sub_dir
+        print("Parsing annotations of camera: ", sub_dir)
         anno_file = os.path.join(inputdir, sub_dir, "Detections/allD.txt")
         annos = anno_file2dict(anno_file)
         outdir = os.path.join(outputdir, "Annotations", sub_dir)
@@ -94,7 +94,7 @@ def parse_anno_file(inputdir, outputdir):
         for filename, anno in annos.items():
             anno_tree = instance2xml_base(anno)
             outfile = os.path.join(outdir, os.path.splitext(filename)[0]+".xml")
-            print "Generating annotation xml file of picture: ", filename
+            print("Generating annotation xml file of picture: ", filename)
             etree.ElementTree(anno_tree).write(outfile, pretty_print=True)
 
 def visualize_bbox(xml_file, img_file):
