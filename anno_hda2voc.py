@@ -1,4 +1,4 @@
-import os
+import os, argparse
 from lxml import etree, objectify
 
 # camera image size
@@ -115,10 +115,19 @@ def visualize_bbox(xml_file, img_file):
     cv2.waitKey(0)
 
 
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input_dir", help="HDA dataset detection annotation files")
+    parser.add_argument("output_dir", help="Annotation saving path")
+    args = parser.parse_args()
+    parse_anno_file(args.input_dir, args.output_dir)
+
+
 if __name__ == "__main__":
-    inputdir = "/startdt_data/HDA_Dataset_V1.3/hda_detections/GtAnnotationsAll"
-    outputdir = "/startdt_data/HDA_Dataset_V1.3/hda_image_sequences_matlab"
-    parse_anno_file(inputdir, outputdir)
-    xml_file = "/startdt_data/HDA_Dataset_V1.3/hda_image_sequences_matlab/Annotations/camera17/17_2608.xml"
-    img_file = "/startdt_data/HDA_Dataset_V1.3/hda_image_sequences_matlab/camera17/17_2608.jpg"
-    visualize_bbox(xml_file, img_file)
+    main()
+    # inputdir = "/startdt_data/HDA_Dataset_V1.3/hda_detections/GtAnnotationsAll"
+    # outputdir = "/startdt_data/HDA_Dataset_V1.3/hda_image_sequences_matlab"
+    # parse_anno_file(inputdir, outputdir)
+    # xml_file = "/startdt_data/HDA_Dataset_V1.3/hda_image_sequences_matlab/Annotations/camera17/17_2608.xml"
+    # img_file = "/startdt_data/HDA_Dataset_V1.3/hda_image_sequences_matlab/camera17/17_2608.jpg"
+    # visualize_bbox(xml_file, img_file)

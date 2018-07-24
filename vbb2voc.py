@@ -1,9 +1,10 @@
-import os, glob
+import os, glob, argparse
 import cv2
 from scipy.io import loadmat
 from collections import defaultdict
 import numpy as np
 from lxml import etree, objectify
+
 
 def vbb_anno2dict(vbb_file, cam_id, person_types=None):
     """
@@ -123,11 +124,11 @@ def instance2xml_base(anno, img_size, bbox_type='xyxy'):
         if xmin < 0:
             xmin = 0
         if xmax > img_size[0] - 1:
-            xmax = img_size[0] - 1;
+            xmax = img_size[0] - 1
         if ymin < 0:
-            ymin = 0;
+            ymin = 0
         if ymax > img_size[1] - 1:
-            ymax = img_size[1] -1
+            ymax = img_size[1] - 1
         if ymax <= ymin or xmax <= xmin:
             continue
         E = objectify.ElementMaker(annotate=False)
@@ -204,6 +205,24 @@ def visualize_bbox(xml_file, img_file):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("seq_dir", help="Caltech dataset seq data root directory")
+    parser.add_argument("vbb_dir", help="Caltech dataset vbb data root directory")
+    parser.add_argument("output_dir", help="Root saving path for frame and annotation files")
+    parser.add_argument("person_type", default="person", type=str, help="Person type extracted within 4 options: "
+                                                      "'person', 'person-fa', 'person?', 'people'. If multiple type used,"
+                                                      "separated with comma",
+                        choices=["person", "person-fa", "person?", "people"])
+    args = parser.parse_args()
+    outdir = args.output_dir
+    frame_out = os.path.join(outdir, "frame")
+    anno_out = os.path.join(outdir, "annotation")
+    person_type = args.person_type.split(",")
+    parse_anno_file(args.seq_dir, args.vbb_dir, frame_out, anno_out, person_type)
+    print("Generating done!")
+
+
+def test():
     seq_inputdir = "/startdt_data/caltech_pedestrian_dataset"
     vbb_inputdir = "/startdt_data/caltech_pedestrian_dataset/annotations"
     seq_outputdir = "/startdt_data/caltech_pedestrian_dataset/test"
