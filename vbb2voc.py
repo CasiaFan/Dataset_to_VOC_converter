@@ -218,7 +218,7 @@ def main():
     frame_out = os.path.join(outdir, "frame")
     anno_out = os.path.join(outdir, "annotation")
     person_type = args.person_type.split(",")
-    parse_anno_file(args.seq_dir, args.vbb_dir, frame_out, anno_out, person_type)
+    parse_anno_file(args.vbb_dir, args.seq_dir, frame_out, anno_out, person_type)
     print("Generating done!")
 
 
