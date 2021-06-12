@@ -1,4 +1,4 @@
-These scripts are used for convert datasets (MS COCO, Caltech pedestrian dataset) to PASCAL VOC format for later training.
+These scripts are used for converting annotations of pedestrian datasets, including MS COCO, Caltech pedestrian dataset, and HDA to PASCAL VOC format.
 
 ### Requirements
 - **Python3.X**
